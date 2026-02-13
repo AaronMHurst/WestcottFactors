@@ -6,7 +6,7 @@ Python package for calculating Westcott $g$-factors, which adjust thermal-neutro
 
 This project can be built and installed by running the `installation.sh` script at the terminal command line of the project directory:
 
-```bash
+```Bash
 $ git clone https://github.com/DMatters/WestcottFactors.git
 $ cd Westcott
 $ sh installation.sh
@@ -14,6 +14,34 @@ $ sh installation.sh
 
 As an alternative the project can also be installed via `pip` since it is being concurrently maintained on the Test instance of the Python Package Index repository https://test.pypi.org/project/westcott/
 
-```bash
+```Bash
 pip install -i https://test.pypi.org/simple/ westcott
 ```
+
+## Testing
+
+A suite of Python modules containing unit tests has been developed for this project.  These unit tests are located in the `tests` folder.  To run the suite and ensure they work with the local Python environment, run `tox` in the project directory where the `tox.ini` file is also located:
+
+```Bash
+$ tox -r
+```
+
+This project has the following Python-package dependencies: `numpy`, `scipy`, `pandas`, and `pytest`.  The session is automatically started after building against the required Python environment.
+
+## Running the software
+
+Following installation, the `westcott` scripts can be ran from any location by importing the library and making an instance of the `Westcott` class:
+
+```Bash
+$ python
+```
+```python
+>>> import westcott
+>>> gw = westcott.Westcott()
+```
+
+Various `Jupyter Notebooks` are provided in the `notebooks` folder to demonstrate workflows and methods for interacting with the functionality available to the library.
+
+## Docstrings
+
+Supporting docstrings for the `westcott` methods are currently under development.

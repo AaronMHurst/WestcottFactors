@@ -273,7 +273,6 @@ class Irregularity(Kinematics):
             Dordrecht, the Netherlands (2004). (Equation 1-5).
             
         Arguments:
-
             E_resonance: Energy of cross section resonance [eV]
             Gamma: Resonance width (FWHM) [eV]
             T: Temperature defining Maxwellian distribution [K]
@@ -312,8 +311,31 @@ class gFactors(Irregularity):
         super().__init__(*args,**kwargs)
 
     def gw_Maxwellian(self, T, E, sigma, vn=np.logspace(0,5,100000)):
-        """Westcott g-factor according to assumed theoretical Maxwellian 
-        distribution at a given neutron temperature."""
+        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
+        flux defined according to a Maxwellian distribution: velocity [m/s], energy [eV], cross section [b], temperature [K].
+        
+        Notes:
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            
+        Arguments:
+            T: Temperature defining Maxwellian distribution [K]
+            E: Numpy array of neutron energies where the cross section sigma is defined [eV]
+            sigma: Numpy array of neutron-capture cross section corresponding to the energies in the array E [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+
+        Returns:
+            Value of the Westcott g factor for a Maxwellian distribution defined with a temperature T.
+
+        Raises:
+            Fewer than three positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, at a Maxwellian
+            temperature of 293 K:
+            > gw_Maxwellian(293, E_sigma_In115, sigma_In115)
+        """
         self.T = T
         self.E = E
         self.sigma = sigma
@@ -329,8 +351,32 @@ class gFactors(Irregularity):
         return 1/(sigma0 * K.v_0) * trapezoid(p_v * self.vn * sigma_interp, self.vn) / trapezoid(p_v, self.vn)
 
     def gw_IdealGuide(self, T, E, sigma, vn=np.logspace(0,5,100000)):
-        """Westcott g-factor according to assumed theoretical Maxwellian 
-        distribution at a given neutron temperature."""
+        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
+        flux defined according to an ideal neutron guide distribution: velocity [m/s], energy [eV], cross section [b],
+        temperature [K].
+        
+        Notes:
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            
+        Arguments:
+            T: Temperature defining Maxwellian distribution [K]
+            E: Numpy array of neutron energies where the cross section sigma is defined [eV]
+            sigma: Numpy array of neutron-capture cross section corresponding to the energies in the array E [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+
+        Returns:
+            Value of the Westcott g factor for an ideal guide distribution defined with a temperature T.
+
+        Raises:
+            Fewer than three positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, at an ideal guide
+            temperature of 293 K:
+            > gw_IdealGuide(293, E_sigma_In115, sigma_In115)
+        """
         self.T = T
         self.E = E
         self.sigma = sigma
@@ -346,8 +392,34 @@ class gFactors(Irregularity):
         return 1/(sigma0 * K.v_0) * trapezoid(p_v * self.vn * sigma_interp, self.vn) / trapezoid(p_v, self.vn)
 
     def gw_arbitrary(self, E_spectrum, phi_E_spectrum, E_endf, sigma_E_endf, vn=np.logspace(0,5,100000)):
-        """Integrate to evaluate Westcott g-factor for an arbitrary neutron 
-        flux distribution."""
+        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
+        flux defined according to a user-specified distribution: velocity [m/s], energy [eV], cross section [b].
+        
+        Notes:
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            
+        Arguments:
+            E_spectrum: Numpy array of neutron energies where the flux spectrum is defined [eV]
+            phi_E_spectrum: Numpy array of flux distribution as a function of energy [pdf]
+            E_endf: Numpy array of neutron energies where the cross section sigma_E_endf is defined [eV]
+            sigma_E_endf: Numpy array of neutron-capture cross section corresponding to the energies in the array E_endf [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+
+        Returns:
+            Value of the Westcott g factor for a user-specified flux distribution.
+
+        Raises:
+            Fewer than four positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, and a flux distribution
+            corresponding to the cold-neutron source at the Budapest Research Reactor (BRR), after ingesting the distribution 
+            from a CSV file titled 'bnc_cold_spectrum_2012.csv' using the 'get_flux' function and defining the energy array and 
+            flux array as 'En_BRR_cold' and 'phi_E_BRR_cold', respectively:
+            > gw_arbitrary(En_BRR_cold, phi_E_BRR_cold, E_sigma_In115, sigma_In115)
+        """
         self.E_spectrum = E_spectrum
         self.phi_E_spectrum = phi_E_spectrum
         self.E_endf = E_endf

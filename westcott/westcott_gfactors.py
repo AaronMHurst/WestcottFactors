@@ -70,14 +70,49 @@ class Kinematics(UserSpectrum):
         print(f"Planck constant = {Kinematics.h_eVs} eV*s")
         
     def vel(self,En):
-        """Convert neutron energy (eV) to velocity (m/s)"""
+        """Convert neutron energy to velocity: energy [eV]; velocity [m/s].
+
+        Arguments:
+            En: Neutron energy [eV].
+
+        Returns:
+            Floating-point value for neutron velocity [m/s].
+
+        Raises:
+            Fewer than one positional argument raises a TypeError exception.
+
+        Example:
+            To obtain neutron velocity corresponding to a neutron with an energy of 5.0 eV:
+            > vel(5.0)
+        """
         self.En = En
         
         E_joules = self.En*Kinematics.eV
         return np.sqrt(2*E_joules/Kinematics.m_n)
 
     def phi_v_Maxwellian(self, T, v_array):
-        """Maxwellian flux distribution at a given temperature T (K), as a function of velocity (m/s)"""
+        """Evaluate Maxwellian neutron flux distribution at a given temperature, across an array of 
+        velocities: temperature [K]; velocity array energy [eV]; velocity array [m/s].
+
+        Notes:
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
+            Dordrecht, the Netherlands (2004).
+
+        Arguments:
+            T: Temperature defining Maxwellian distribution [K]
+            v_array: Numpy array of neutron velocities [m/s].
+
+        Returns:
+            Numpy array of Maxwellian distribution values at each velocity in v_array.
+
+        Raises:
+            Fewer than two positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the values for a Maxwellian neutron-flux distribution, defined with a temperature of 
+            293 K, corresponding to neutron velocities ranging from 1 to 10000 m/s:
+            > phi_v_Maxwellian(293, np.linspace(1,10000,10000))
+        """
         self.T = T
         self.v_array = np.array(v_array)
         
@@ -88,7 +123,30 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)
 
     def phi_v_IdealGuide(self, T, v_array):
-        """Ideal Guide flux distribution at a given temperature T (K), as a function of velocity (m/s)"""
+        """Evaluate an ideal guide neutron flux distribution at a given temperature, across an array of 
+        velocities: temperature [K]; velocity array energy [eV]; velocity array [m/s].
+
+        Notes:
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
+            Dordrecht, the Netherlands (2004).
+            [2] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+
+        Arguments:
+            T: Temperature defining ideal guide distribution [K]
+            v_array: Numpy array of neutron velocities [m/s].
+
+        Returns:
+            Numpy array of ideal guide distribution values at each velocity in v_array.
+
+        Raises:
+            Fewer than two positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the values for a ideal guide neutron-flux distribution, defined with a temperature of 
+            293 K, corresponding to neutron velocities ranging from 1 to 10000 m/s:
+            > phi_v_IdealGuide(293, np.linspace(1,10000,10000))
+        """
         self.T = T
         self.v_array = np.array(v_array)
         
@@ -99,7 +157,31 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)
 
     def phi_v_arbitrary(self, En_array, phi_E_array):
-        """Convert a user-defined flux distribution as a function of energy (eV) to a normalized flux distribution as a function of velocity (m/s)"""
+        """Convert a user-defined neutron flux distribution as a function of energy to a normalized flux
+        distribution as a function of velocity: flux distribution [pdf]; energy [eV]; velocity [m/s].
+
+        Notes:
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+
+        Arguments:
+            En_array: Numpy array of neutron energies [eV]
+            phi_E_array: Numpy array of flux distribution as a function of energy [pdf].
+
+        Returns:
+            Numpy array of normalized flux distribution values at each velocity corresponding to an 
+            energy in En_array.
+
+        Raises:
+            Fewer than two positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the normalized flux distribution corresponding to the cold-neutron source at the
+            Budapest Research Reactor (BRR), after ingesting the flux distribution from a CSV file titled
+            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function and defining the energy array and 
+            flux array as 'En_BRR_cold' and 'phi_E_BRR_cold', respectively:
+            > phi_v_arbitrary(En_BRR_cold, phi_E_BRR_cold)
+        """
         self.En = np.array(En_array)
         self.phi_E = np.array(phi_E_array)
 
@@ -110,7 +192,30 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)/trapezoid(np.array(phi_v), vn_array)
 
     def p_v(self, v_array, phi_v_array):
-        """Convert neutron flux distribution to a normalized neutron density distribution, both as a function of velocity (m/s)"""
+        """Convert a neutron flux distribution as a function of velocity to a normalized neutron density 
+        distribution as a function of velocity: flux distribution [pdf]; density distribution [pdf]; velocity [m/s].
+        
+        Notes:
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
+            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+
+        Arguments:
+            v_array: Numpy array of neutron velocities [m/s]
+            phi_v_array: Numpy array of flux distribution as a function of velocity [pdf].
+
+        Returns:
+            Numpy array of normalized neutron density distribution values at each velocity in v_array.
+
+        Raises:
+            Fewer than two positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the normalized density distribution corresponding to the cold-neutron source at the
+            Budapest Research Reactor (BRR), after ingesting the flux distribution from a CSV file titled
+            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function, and processing it using the 
+            'phi_v_arbitrary' function into a flux distribution array phi_v_BRR_cold and velocity array v_BRR_cold:
+            > p_v(v_BRR_cold, phi_v_BRR_cold)
+        """
         self.v = np.array(v_array)
         self.phi_v = np.array(phi_v_array)
 

@@ -44,7 +44,7 @@ Various `Jupyter Notebooks` are provided in the `notebooks` folder to demonstrat
 
 ## Docstrings
 
-Supporting docstrings for the `westcott` methods are currently under development.
+Supporting docstrings for the `westcott` methods are included as part of each module.
 
 ## References
 <a id="1">[1]</a>

@@ -27,11 +27,50 @@ class CrossSectionData(object):
         self.capture_data_dict = dict(sorted(self.capture_data_dict.items()))
 
     def find_targets(self):
+        """Find list of targets containing neutron-capture cross-section data.
+
+        Arguments:
+            None
+
+        Returns:
+            List object containing string representations of neutron-capture 
+            target nuclides.
+
+        Raises:
+            Additional positional arguments raises a TypeError exception.
+
+        Example:
+            To find list of all available targets:
+            > find_targets()
+        """
         return [target for (target, value) in self.capture_data_dict.items()]
 
     def get_MT102(self, target):
-        """Retrieve point-wise cross section data for defined target as 
-        DataFrame object."""
+        """Retrieve point-wise cross section data for defined target from the 
+        ENDF/B-VIII [1] library: energy [eV]; cross section [b].
+
+        Notes:
+            [1] D. Brown at al., ENDF/B-VIII.0}: The 8th Major Release of the 
+                Nuclear Reaction Data Library with CIELO-project Cross 
+                Sections, New Standards and Thermal Scattering Data, Nucl. Data
+                Sheets 148, 1 (2018).
+
+        Arguments:
+            target: A string argument that defines the target nucleus according 
+                    to chemical symbol and mass.
+
+        Returns:
+            DataFrame object containing energy [eV] and cross-section [b] data 
+            corresponding to target nucleus argument.
+
+        Raises:
+            Fewer or more positional arguments raises a TypeError exception.
+
+        Example:
+            To extract ENDF neutron-capture cross-section data for the 'Gd157' 
+            target:
+            > get_MT102('Gd157')
+        """
         self.target = target
         df = None
         for k,v in self.capture_data_dict.items():
@@ -44,8 +83,35 @@ class CrossSectionData(object):
             return df
 
     def sigma_ENDF(self, target):
-        """Convert ENDF energy and cross section DataFrame to numpy arrays 
-        for interpolation and integration."""
+        """Convert ENDF/B-VIII [1] energy [eV] and cross-section [b] data from 
+        DataFrame object into numpy arrays allowing for interpolation and 
+        integration.
+
+        Notes:
+            [1] D. Brown at al., ENDF/B-VIII.0}: The 8th Major Release of the 
+                Nuclear Reaction Data Library with CIELO-project Cross 
+                Sections, New Standards and Thermal Scattering Data, Nucl. Data
+                Sheets 148, 1 (2018).
+
+        Arguments:
+            target: A string argument that defines the target nucleus according
+                    to chemical symbol and mass.
+
+        Returns:
+            Tuple object containing two elements corresponding to target 
+            nucleus argument:
+        
+            [0]: Numpy array of the energy in units of [eV].
+            [1]: Numpy array of the cross section in units of [b].
+
+        Raises:
+            Fewer or more positional arguments raises a TypeError exception.
+
+        Example:
+            To create numpy arrays for the energy and cross-section data from 
+            ENDF for the 'Gd157' target:
+            > energy, cross_section = sigma_ENDF('Gd157')
+        """
         self.target = target
 
         df = CrossSectionData.get_MT102(self,self.target)
@@ -73,10 +139,58 @@ class NeutronFlux(CrossSectionData):
         self.flux_data_dict = dict(sorted(self.flux_data_dict.items()))
 
     def find_flux(self):
+        """Find available experimental neutron-flux spectra from the different
+        facilities.
+
+        Arguments:
+            None
+
+        Returns:
+            List object containing two-element tuples corresponding to the 
+            different experimental neutron-flux spectra:
+            
+            [0]: Integer (0-3) identifying experimental neutron-flux spectrum.
+            [1]: String representing name of corresponding CSV-formatted file.
+            
+        Raises:
+            Additional positional arguments raises a TypeError exception.
+
+        Example:
+            To find list of all available experimental neutron-flux spectra:
+            > find_flux()
+        """
         return [(i,f) for (i, f) in self.flux_data_dict.items()]
 
     def get_flux_df(self,flux):
-        """Retrive experimental neutron-flux spectrum as DataFrame object."""
+        """Retrieve point-wise data for desired experimental neutron-flux 
+        spectrum.
+
+        Arguments:
+            flux: An integer argument corresponding to the specified 
+                  experimental neutron-flux spectrum:
+
+                  0: Budapest Research Reactor, cold (2002).
+                  1: Budapest Research Reactor, cold (2012).
+                  2: Budapest Research Reactor, thermal (2002).
+                  3: FRM-II Reactor, cold (2008).
+
+        Returns:
+            DataFrame object containing energy [eV] and flux [pdf] data 
+            corresponding to flux argument.
+
+        Raises:
+            Fewer or more positional arguments raises a TypeError exception.
+
+        Examples:
+            To get the flux DataFrame for the cold Budapest spectrum (2002):
+            > get_flux_df(0)
+            To get the flux DataFrame for the cold Budapest spectrum (2012):
+            > get_flux_df(1)
+            To get the flux DataFrame for the thermal Budapest spectrum (2002):
+            > get_flux_df(2)
+            To get the flux DataFrame for the cold FRM-II spectrum (2008):
+            > get_flux_df(3)
+        """
         self.flux = flux
         df = None
         for k,v in self.flux_data_dict.items():
@@ -89,8 +203,39 @@ class NeutronFlux(CrossSectionData):
             return df
 
     def get_flux(self, flux):
-        """Convert experimental flux DataFrame into numpy arrays for interpolation 
-        and integration."""
+        """Convert experimental energy [eV] and flux [pdf] data from DataFrame 
+        object into numpy arrays for allowing for interpolation and 
+        integration.
+
+        Arguments:
+            flux: An integer argument corresponding to the specified 
+                  experimental neutron-flux spectrum:
+
+                  0: Budapest Research Reactor, cold (2002).
+                  1: Budapest Research Reactor, cold (2012).
+                  2: Budapest Research Reactor, thermal (2002).
+                  3: FRM-II Reactor, cold (2008).
+
+        Returns:
+            Tuple object containing two elements corresponding to neutron-flux 
+            argument:
+        
+            [0]: Numpy array of the energy (E) in units of [eV].
+            [1]: Numpy array of the flux (dn/dE) in units of [pdf].
+
+        Raises:
+            Fewer or more positional arguments raises a TypeError exception.
+
+        Examples:
+            To get the flux data for the cold Budapest spectrum (2002):
+            > energy, flux = get_flux(0)
+            To get the flux data for the cold Budapest spectrum (2012):
+            > energy, flux = get_flux(1)
+            To get the flux data for the thermal Budapest spectrum (2002):
+            > energy, flux = get_flux(2)
+            To get the flux data for the cold FRM-II spectrum (2008):
+            > energy, flux = get_flux(3)
+        """
         self.flux = flux
 
         df = NeutronFlux.get_flux_df(self, self.flux)
@@ -137,10 +282,23 @@ class ResonanceData(NeutronFlux):
 
     def find_resonances(self,**kwargs):
         """Find list of all 'target+n' systems with resonance parameters in 
-        the ENDF-B/VIII.1 library: includes Breit-Wigner and Reich-Moore.
+        the ENDF-B/VIII.1 [2] library: includes Breit-Wigner and Reich-Moore.
+
+        Notes:
+            [2] G. Nobre, D. Brown, R. Arcilla, R. Coles, B. Shu, Progress 
+                towards the ENDF/B-VIII.1 release, Eur. Phys. J. (Web of 
+                Conf.), 294, 04004 (2024).
 
         Arguments:
+            None: All resonance parameters (Breit-Wigner and Reich-Moore).
+            kwargs: Optional keyword used to specify resonance-parameter type:
+                    `res='BW'` for Breit-Wigner
+                    `res='RM'` for Reich-Moore
+
         Returns:
+            List object containing target nuclides that have associated 
+            resonance parameters of the form Breit-Wigner or Reich-Moore.
+
         Raises:
             A TypeError exception gets raised if a string argument gets passed 
             without a keyword.
@@ -152,7 +310,7 @@ class ResonanceData(NeutronFlux):
             >find_resonances(res='BW')
             Find Reich-Moore resonances only:
             >find_resonances(res='RM')
-"""
+        """
         self.kwargs = kwargs
 
         if self.kwargs == {} or self.kwargs is None:
@@ -174,8 +332,40 @@ class ResonanceData(NeutronFlux):
                     return
 
     def get_res_paras(self, target):
-        """Extract resonance parameters for a defined target nucleus and return 
-        DataFrame object."""
+        """Extract resonance parameters from ENDF-B/VIII.1 [2] for a defined 
+        target nucleus.  The parameters are of the form Breit-Wigner or 
+        Reich-Moore.
+
+        Notes:
+            [2] G. Nobre, D. Brown, R. Arcilla, R. Coles, B. Shu, Progress 
+                towards the ENDF/B-VIII.1 release, Eur. Phys. J. (Web of 
+                Conf.), 294, 04004 (2024).
+
+        Arguments:
+            target: A string argument that defines the target nucleus according
+                    to chemical symbol and mass.
+        
+        Returns:
+            DataFrame object containing different columns depending on the 
+            resonance parameter selection for the defined target nucleus 
+            argument: 
+
+            Breit-Wigner: energy [eV]; orbital angular momentum (L); spin (J);
+                          total width [eV]; neutron width [eV]; 
+                          capture width [eV].
+
+            Reich-Moore: energy [eV]; photon width [eV]; neutron width [eV]; 
+                         spin (J); parity (Pi); orbital angular momentum (L).
+        
+        Raises:
+            Fewer or more positional arguments raises a TypeError exception.
+
+        Examples:
+            Extract Breit-Wigner resonance parameters for 'Kr83' target:
+            > get_res_paras('Kr83')
+            Extract Reich-Moore resonance parameters for 'Gd157' target:
+            > get_res_paras('Gd157')
+        """
         self.target = target
         df = None
         PARAS_EXIST = False

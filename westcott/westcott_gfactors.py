@@ -25,7 +25,21 @@ class Kinematics(UserSpectrum):
         -Velocity
         -Temperature
         -Wavelength
-        -Energy"""
+        -Energy
+
+        Arguments:
+            None
+
+        Returns:
+            Void
+
+        Raises:
+            Additional positional arguments raises a TypeError exception.
+
+        Example:
+            To print thermal neutron properties:
+            > display_thermal_properties()
+        """
         print(f"Velocity = {Kinematics.v_0} m/s")
         print(f"Temperature = {Kinematics.T_0} K")
         print(f"Wavelength = {Kinematics.lambda_0} A")
@@ -33,7 +47,21 @@ class Kinematics(UserSpectrum):
 
     def display_constants(self) -> None:
         """Prints to screen various constants useful for dealing with neutron 
-        beam kinematics and unit conversions."""
+        beam kinematics and unit conversions.
+
+        Arguments:
+            None
+
+        Returns:
+            Void
+
+        Raises:
+            Additional positional arguments raises a TypeError exception.
+
+        Example:
+            To print constants:
+            > display_constants()
+        """
         print(f"1 eV = {Kinematics.eV} J")
         print(f"Neutron mass = {Kinematics.m_n} kg")
         print(f"Boltzmann constant = {Kinematics.kB} J/K")

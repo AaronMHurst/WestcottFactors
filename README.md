@@ -8,7 +8,7 @@ This project can be built and installed by running the `installation.sh` script 
 
 ```Bash
 $ git clone https://github.com/DMatters/WestcottFactors.git
-$ cd Westcott
+$ cd WestcottFactors
 $ sh installation.sh
 ```
 

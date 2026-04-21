@@ -232,8 +232,29 @@ class Irregularity(Kinematics):
         super().__init__(*args,**kwargs)
 
     def del_0(self, v, E_resonance, Gamma):
-        """Lorentzian lineshape for the irregularity function, per Molnar 
-        Eqs. 1-3."""
+        """Evaluate the neutron-capture cross section irregularity function, defined according to a standard Lorentzian lineshape,
+        at a given neutron velocity: velocity [m/s], resonance energy [eV], resonance width [eV].
+        
+        Notes:
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
+            Dordrecht, the Netherlands (2004). (Equation 1-3).
+            
+        Arguments:
+            v: Neutron velocity [m/s]
+            E_resonance: Energy of cross section resonance [eV]
+            Gamma: Resonance width (FWHM) [eV].
+
+        Returns:
+            Value of cross section irregularity function at the input velocity v.
+
+        Raises:
+            Fewer than three positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the value of the irregularity function del_0 for 115In (resonance energy = 1.457 eV; width = 75 meV)
+            at a neutron velocity of 2200 m/s:
+            > del_0(2200, 1.457, 0.075)
+        """
         self.v = v
         self.E_resonance = E_resonance
         self.Gamma = Gamma
@@ -243,8 +264,32 @@ class Irregularity(Kinematics):
         return ((self.E_resonance - K.E_0)**2 + (self.Gamma**2)/4) / ((self.E_resonance - E)**2 + (self.Gamma**2)/4)
 
     def gw_irregularity(self, E_resonance, Gamma, T=None, vn=np.logspace(0,5,100000)):
-        """Evaluate g-factor using irregularity function method described by 
-        Molnar et al. (Eqs. 1-5)."""
+        """Evaluate the Westcott g factor for a nucleus using the irregularity function method, according to a Maxwellian 
+        neutron flux distribution, by integrating over the neutron velocity: velocity [m/s], resonance energy [eV], 
+        resonance width [eV], temperature [K].
+        
+        Notes:
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
+            Dordrecht, the Netherlands (2004). (Equation 1-5).
+            
+        Arguments:
+
+            E_resonance: Energy of cross section resonance [eV]
+            Gamma: Resonance width (FWHM) [eV]
+            T: Temperature defining Maxwellian distribution [K]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+
+        Returns:
+            Value of the Westcott g factor for a Maxwellian distribution defined with a temperature T.
+
+        Raises:
+            Fewer than three positional argument raises a TypeError exception.
+
+        Example:
+            To obtain the value of the Westcott g factor for 115In (resonance energy = 1.457 eV; width = 75 meV)
+            at a Maxwellian temperature of 293 K:
+            > gw_irregularity(1.457, 0.075, 293)
+        """
         self.E_resonance = E_resonance
         self.Gamma = Gamma
         self.T = T

@@ -73,7 +73,7 @@ class Kinematics(UserSpectrum):
         """Convert neutron energy to velocity: energy [eV]; velocity [m/s].
 
         Arguments:
-            En: Neutron energy [eV].
+            En: Neutron energy [eV] as integer or float.
 
         Returns:
             Floating-point value for neutron velocity [m/s].
@@ -82,8 +82,9 @@ class Kinematics(UserSpectrum):
             Fewer than one positional argument raises a TypeError exception.
 
         Example:
-            To obtain neutron velocity corresponding to a neutron with an energy of 5.0 eV:
-            > vel(5.0)
+            To obtain neutron velocity corresponding to a neutron with an 
+            energy of 5.0 eV:
+            > En_5eV = vel(5.0)
         """
         self.En = En
         
@@ -91,27 +92,31 @@ class Kinematics(UserSpectrum):
         return np.sqrt(2*E_joules/Kinematics.m_n)
 
     def phi_v_Maxwellian(self, T, v_array):
-        """Evaluate Maxwellian neutron flux distribution at a given temperature, across an array of 
-        velocities: temperature [K]; velocity array energy [eV]; velocity array [m/s].
+        """Evaluate Maxwellian neutron flux distribution at a given temperature,
+        across an array of velocities: temperature [K]; velocity array energy
+        [eV]; velocity array [m/s].
 
         Notes:
-            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
-            Dordrecht, the Netherlands (2004).
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, 
+            Kluwer Academic, Dordrecht, the Netherlands (2004).
 
         Arguments:
-            T: Temperature defining Maxwellian distribution [K]
+            T: Temperature defining Maxwellian distribution [K] as integer or
+            float
             v_array: Numpy array of neutron velocities [m/s].
 
         Returns:
-            Numpy array of Maxwellian distribution values at each velocity in v_array.
+            Numpy array of Maxwellian distribution values at each velocity in
+            v_array.
 
         Raises:
             Fewer than two positional argument raises a TypeError exception.
 
         Example:
-            To obtain the values for a Maxwellian neutron-flux distribution, defined with a temperature of 
-            293 K, corresponding to neutron velocities ranging from 1 to 10000 m/s:
-            > phi_v_Maxwellian(293, np.linspace(1,10000,10000))
+            To obtain the values for a Maxwellian neutron-flux distribution, 
+            defined with a temperature of 293 K, corresponding to neutron 
+            velocities ranging from 1 to 10000 m/s:
+            > phi_max_293K = phi_v_Maxwellian(293, np.linspace(1,10000,10000))
         """
         self.T = T
         self.v_array = np.array(v_array)
@@ -123,29 +128,33 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)
 
     def phi_v_IdealGuide(self, T, v_array):
-        """Evaluate an ideal guide neutron flux distribution at a given temperature, across an array of 
-        velocities: temperature [K]; velocity array energy [eV]; velocity array [m/s].
+        """Evaluate an ideal guide neutron flux distribution at a given
+        temperature, across an array of velocities: temperature [K]; 
+        velocity array energy [eV]; velocity array [m/s].
 
         Notes:
-            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
-            Dordrecht, the Netherlands (2004).
-            [2] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis,
+            Kluwer Academic, Dordrecht, the Netherlands (2004).
+            [2] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors
+            Extended to Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
 
         Arguments:
-            T: Temperature defining ideal guide distribution [K]
+            T: Temperature defining ideal guide distribution [K] as integer or 
+            float
             v_array: Numpy array of neutron velocities [m/s].
 
         Returns:
-            Numpy array of ideal guide distribution values at each velocity in v_array.
+            Numpy array of ideal guide distribution values at each velocity
+            in v_array.
 
         Raises:
             Fewer than two positional argument raises a TypeError exception.
 
         Example:
-            To obtain the values for a ideal guide neutron-flux distribution, defined with a temperature of 
-            293 K, corresponding to neutron velocities ranging from 1 to 10000 m/s:
-            > phi_v_IdealGuide(293, np.linspace(1,10000,10000))
+            To obtain the values for a ideal guide neutron-flux distribution,
+            defined with a temperature of 293 K, corresponding to neutron
+            velocities ranging from 1 to 10000 m/s:
+            > phi_ideal_293K = phi_v_IdealGuide(293, np.linspace(1,10000,10000))
         """
         self.T = T
         self.v_array = np.array(v_array)
@@ -157,30 +166,37 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)
 
     def phi_v_arbitrary(self, En_array, phi_E_array):
-        """Convert a user-defined neutron flux distribution as a function of energy to a normalized flux
-        distribution as a function of velocity: flux distribution [pdf]; energy [eV]; velocity [m/s].
+        """Convert a user-defined neutron flux distribution as a function
+        of energy to a normalized flux distribution as a function of 
+        velocity: flux distribution [pdf]; energy [eV]; velocity [m/s].
 
         Notes:
-            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g 
+            Factors Extended to Arbitrary Neutron Spectra,” 
+            arXiv: 2602.05995 (2026).
 
         Arguments:
             En_array: Numpy array of neutron energies [eV]
-            phi_E_array: Numpy array of flux distribution as a function of energy [pdf].
+            phi_E_array: Numpy array of flux distribution as a function
+            of energy [pdf].
 
         Returns:
-            Numpy array of normalized flux distribution values at each velocity corresponding to an 
-            energy in En_array.
+            Numpy array of normalized flux distribution values at each
+            velocity corresponding to an energy in En_array.
 
         Raises:
             Fewer than two positional argument raises a TypeError exception.
 
         Example:
-            To obtain the normalized flux distribution corresponding to the cold-neutron source at the
-            Budapest Research Reactor (BRR), after ingesting the flux distribution from a CSV file titled
-            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function and defining the energy array and 
-            flux array as 'En_BRR_cold' and 'phi_E_BRR_cold', respectively:
-            > phi_v_arbitrary(En_BRR_cold, phi_E_BRR_cold)
+            To obtain the normalized flux distribution corresponding to the
+            cold-neutron source at the Budapest Research Reactor (BRR), 
+            after ingesting the flux distribution from a CSV file titled
+            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function 
+            and defining the energy array and flux array as 'En_BRR_cold'
+            and 'phi_E_BRR_cold', respectively:
+            > find_flux()
+            > En_BRR_cold, phi_E_BRR_cold = get_flux(1)
+            > phi_v_BRR_cold = phi_v_arbitrary(En_BRR_cold, phi_E_BRR_cold)
         """
         self.En = np.array(En_array)
         self.phi_E = np.array(phi_E_array)
@@ -192,29 +208,40 @@ class Kinematics(UserSpectrum):
         return np.array(phi_v)/trapezoid(np.array(phi_v), vn_array)
 
     def p_v(self, v_array, phi_v_array):
-        """Convert a neutron flux distribution as a function of velocity to a normalized neutron density 
-        distribution as a function of velocity: flux distribution [pdf]; density distribution [pdf]; velocity [m/s].
+        """Convert a neutron flux distribution as a function of velocity to
+        a normalized neutron density distribution as a function of velocity:
+        flux distribution [pdf]; density distribution [pdf]; velocity [m/s].
         
         Notes:
-            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g
+            Factors Extended to Arbitrary Neutron Spectra,” 
+            arXiv: 2602.05995 (2026).
 
         Arguments:
             v_array: Numpy array of neutron velocities [m/s]
-            phi_v_array: Numpy array of flux distribution as a function of velocity [pdf].
+            phi_v_array: Numpy array of flux distribution as a function
+            of velocity [pdf].
 
         Returns:
-            Numpy array of normalized neutron density distribution values at each velocity in v_array.
+            Numpy array of normalized neutron density distribution values
+            at each velocity in v_array.
 
         Raises:
             Fewer than two positional argument raises a TypeError exception.
 
         Example:
-            To obtain the normalized density distribution corresponding to the cold-neutron source at the
-            Budapest Research Reactor (BRR), after ingesting the flux distribution from a CSV file titled
-            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function, and processing it using the 
-            'phi_v_arbitrary' function into a flux distribution array phi_v_BRR_cold and velocity array v_BRR_cold:
-            > p_v(v_BRR_cold, phi_v_BRR_cold)
+            To obtain the normalized density distribution corresponding to
+            the cold-neutron source at the Budapest Research Reactor (BRR):,
+            after ingesting the flux distribution from a CSV file titled
+            'bnc_cold_spectrum_2012.csv' using the 'get_flux' function, 
+            and processing it using the phi_v_arbitrary' function into a 
+            flux distribution array phi_v_BRR_cold and velocity array
+            v_BRR_cold:
+            > find_flux()
+            > En_BRR_cold, phi_E_BRR_cold = get_flux(1)
+            > phi_v_BRR_cold = phi_v_arbitrary(En_BRR_cold, phi_E_BRR_cold)
+            > v_BRR_cold = vel(En_BRR_cold)
+            > p_v_BRR_cold = p_v(v_BRR_cold, phi_v_BRR_cold)
         """
         self.v = np.array(v_array)
         self.phi_v = np.array(phi_v_array)
@@ -232,28 +259,33 @@ class Irregularity(Kinematics):
         super().__init__(*args,**kwargs)
 
     def del_0(self, v, E_resonance, Gamma):
-        """Evaluate the neutron-capture cross section irregularity function, defined according to a standard Lorentzian lineshape,
-        at a given neutron velocity: velocity [m/s], resonance energy [eV], resonance width [eV].
+        """Evaluate the neutron-capture cross section irregularity function,
+        defined according to a standard Lorentzian lineshape at a given 
+        resonance energy and width, at a given neutron velocity: velocity
+        [m/s], resonance energy [eV], resonance width [eV].
         
         Notes:
-            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
-            Dordrecht, the Netherlands (2004). (Equation 1-3).
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation 
+            Analysis, Kluwer Academic, Dordrecht, the Netherlands (2004).
+            (Equation 1-3).
             
         Arguments:
-            v: Neutron velocity [m/s]
-            E_resonance: Energy of cross section resonance [eV]
-            Gamma: Resonance width (FWHM) [eV].
+            v: Neutron velocity [m/s] as integer or float
+            E_resonance: Energy of resonance [eV] as integer or float
+            Gamma: Resonance width (FWHM) [eV] as integer or float
 
         Returns:
-            Value of cross section irregularity function at the input velocity v.
+            Value of cross section irregularity function at the input
+            velocity v.
 
         Raises:
             Fewer than three positional argument raises a TypeError exception.
 
         Example:
-            To obtain the value of the irregularity function del_0 for 115In (resonance energy = 1.457 eV; width = 75 meV)
-            at a neutron velocity of 2200 m/s:
-            > del_0(2200, 1.457, 0.075)
+            To obtain the value of the irregularity function del_0 for
+            115In (resonance energy = 1.457 eV; width = 75 meV) at a 
+            neutron velocity of 2200 m/s:
+            > del0_In115_thermal = del_0(2200, 1.457, 0.075)
         """
         self.v = v
         self.E_resonance = E_resonance
@@ -264,30 +296,37 @@ class Irregularity(Kinematics):
         return ((self.E_resonance - K.E_0)**2 + (self.Gamma**2)/4) / ((self.E_resonance - E)**2 + (self.Gamma**2)/4)
 
     def gw_irregularity(self, E_resonance, Gamma, T=None, vn=np.logspace(0,5,100000)):
-        """Evaluate the Westcott g factor for a nucleus using the irregularity function method, according to a Maxwellian 
-        neutron flux distribution, by integrating over the neutron velocity: velocity [m/s], resonance energy [eV], 
-        resonance width [eV], temperature [K].
+        """Evaluate the Westcott g factor for a nucleus using the irregularity
+        function method, according to a Maxwellian neutron flux distribution,
+        by integrating over the neutron velocity: velocity [m/s], resonance
+        energy [eV], resonance width [eV], temperature [K].
         
         Notes:
-            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation Analysis, Kluwer Academic,
-            Dordrecht, the Netherlands (2004). (Equation 1-5).
+            [1] G. L. Molnár(Ed.),Handbook of Prompt Gamma Activation
+            Analysis, Kluwer Academic, Dordrecht, the Netherlands (2004).
+            (Equation 1-5).
             
         Arguments:
-            E_resonance: Energy of cross section resonance [eV]
-            Gamma: Resonance width (FWHM) [eV]
-            T: Temperature defining Maxwellian distribution [K]
-            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+            E_resonance: Energy of cross section resonance [eV] as integer or
+            float
+            Gamma: Resonance width (FWHM) [eV] as integer or float
+            T: Temperature defining Maxwellian distribution [K] as integer
+            or float
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, 
+            defaults to np.logspace(0,5,100000)
 
         Returns:
-            Value of the Westcott g factor for a Maxwellian distribution defined with a temperature T.
+            Value of the Westcott g factor for a Maxwellian distribution 
+            defined with a temperature T.
 
         Raises:
             Fewer than three positional argument raises a TypeError exception.
 
         Example:
-            To obtain the value of the Westcott g factor for 115In (resonance energy = 1.457 eV; width = 75 meV)
-            at a Maxwellian temperature of 293 K:
-            > gw_irregularity(1.457, 0.075, 293)
+            To obtain the value of the Westcott g factor for 115In 
+            (resonance energy = 1.457 eV; width = 75 meV) at a Maxwellian
+            temperature of 293 K:
+            > g_In115_293K = gw_irregularity(1.457, 0.075, 293)
         """
         self.E_resonance = E_resonance
         self.Gamma = Gamma
@@ -311,30 +350,41 @@ class gFactors(Irregularity):
         super().__init__(*args,**kwargs)
 
     def gw_Maxwellian(self, T, E, sigma, vn=np.logspace(0,5,100000)):
-        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
-        flux defined according to a Maxwellian distribution: velocity [m/s], energy [eV], cross section [b], temperature [K].
+        """Evaluate the Westcott g factor for a nucleus by integrating over
+        the cross section in velocity space, with flux defined according 
+        to a Maxwellian distribution: velocity [m/s], energy [eV], 
+        cross section [b], temperature [K].
         
         Notes:
-            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g
+            Factors Extended to Arbitrary Neutron Spectra,” 
+            arXiv: 2602.05995 (2026).
             
         Arguments:
-            T: Temperature defining Maxwellian distribution [K]
-            E: Numpy array of neutron energies where the cross section sigma is defined [eV]
-            sigma: Numpy array of neutron-capture cross section corresponding to the energies in the array E [b]
-            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+            T: Temperature defining Maxwellian distribution [K] as integer
+            or float
+            E: Numpy array of neutron energies where the cross section sigma
+            is defined [eV]
+            sigma: Numpy array of neutron-capture cross section corresponding
+            to the energies in the array E [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted, 
+            defaults to np.logspace(0,5,100000)
 
         Returns:
-            Value of the Westcott g factor for a Maxwellian distribution defined with a temperature T.
+            Value of the Westcott g factor for a Maxwellian distribution
+            defined with a temperature T.
 
         Raises:
             Fewer than three positional argument raises a TypeError exception.
 
         Example:
-            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
-            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, at a Maxwellian
+            To obtain the value of the Westcott g factor for 115In, 
+            using the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce 
+            arrays E_sigma_In115 and sigma_In115, at a Maxwellian
             temperature of 293 K:
-            > gw_Maxwellian(293, E_sigma_In115, sigma_In115)
+            > E_sigma_In115, sigma_In115 = gw.sigma_ENDF('In115')
+            > g_max_293K = gw_Maxwellian(293, E_sigma_In115, sigma_In115)
         """
         self.T = T
         self.E = E
@@ -351,31 +401,40 @@ class gFactors(Irregularity):
         return 1/(sigma0 * K.v_0) * trapezoid(p_v * self.vn * sigma_interp, self.vn) / trapezoid(p_v, self.vn)
 
     def gw_IdealGuide(self, T, E, sigma, vn=np.logspace(0,5,100000)):
-        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
-        flux defined according to an ideal neutron guide distribution: velocity [m/s], energy [eV], cross section [b],
+        """Evaluate the Westcott g factor for a nucleus by integrating over
+        the cross section in velocity space, with flux defined according to an ideal neutron guide distribution: velocity [m/s], energy [eV], cross section [b],
         temperature [K].
         
         Notes:
-            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g
+            Factors Extended to Arbitrary Neutron Spectra,” 
+            arXiv: 2602.05995 (2026).
             
         Arguments:
-            T: Temperature defining Maxwellian distribution [K]
-            E: Numpy array of neutron energies where the cross section sigma is defined [eV]
-            sigma: Numpy array of neutron-capture cross section corresponding to the energies in the array E [b]
-            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+            T: Temperature defining Maxwellian distribution [K] as integer
+            or float
+            E: Numpy array of neutron energies where the cross section 
+            sigma is defined [eV]
+            sigma: Numpy array of neutron-capture cross section 
+            corresponding to the energies in the array E [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted,
+            defaults to np.logspace(0,5,100000)
 
         Returns:
-            Value of the Westcott g factor for an ideal guide distribution defined with a temperature T.
+            Value of the Westcott g factor for an ideal guide distribution
+            defined with a temperature T.
 
         Raises:
             Fewer than three positional argument raises a TypeError exception.
 
         Example:
-            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
-            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, at an ideal guide
+            To obtain the value of the Westcott g factor for 115In, using
+            the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce 
+            arrays E_sigma_In115 and sigma_In115, at an ideal guide
             temperature of 293 K:
-            > gw_IdealGuide(293, E_sigma_In115, sigma_In115)
+            > E_sigma_In115, sigma_In115 = gw.sigma_ENDF('In115')
+            > g_ideal_293K = gw_IdealGuide(293, E_sigma_In115, sigma_In115)
         """
         self.T = T
         self.E = E
@@ -392,33 +451,50 @@ class gFactors(Irregularity):
         return 1/(sigma0 * K.v_0) * trapezoid(p_v * self.vn * sigma_interp, self.vn) / trapezoid(p_v, self.vn)
 
     def gw_arbitrary(self, E_spectrum, phi_E_spectrum, E_endf, sigma_E_endf, vn=np.logspace(0,5,100000)):
-        """Evaluate the Westcott g factor for a nucleus by integrating over the cross section in velocity space, with
-        flux defined according to a user-specified distribution: velocity [m/s], energy [eV], cross section [b].
+        """Evaluate the Westcott g factor for a nucleus by integrating over
+        the cross section in velocity space, with flux defined according to
+        a user-specified distribution: velocity [m/s], energy [eV], 
+        cross section [b].
         
         Notes:
-            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g Factors Extended to 
-            Arbitrary Neutron Spectra,” arXiv: 2602.05995 (2026).
+            [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g
+            Factors Extended to Arbitrary Neutron Spectra,” 
+            arXiv: 2602.05995 (2026).
             
         Arguments:
-            E_spectrum: Numpy array of neutron energies where the flux spectrum is defined [eV]
-            phi_E_spectrum: Numpy array of flux distribution as a function of energy [pdf]
-            E_endf: Numpy array of neutron energies where the cross section sigma_E_endf is defined [eV]
-            sigma_E_endf: Numpy array of neutron-capture cross section corresponding to the energies in the array E_endf [b]
-            *vn: Numpy array of neutron velocities [m/s]. If omitted, defaults to np.logspace(0,5,100000)
+            E_spectrum: Numpy array of neutron energies where the flux
+            spectrum is defined [eV]
+            phi_E_spectrum: Numpy array of flux distribution as a function
+            of energy [pdf]
+            E_endf: Numpy array of neutron energies where the cross section
+            sigma_E_endf is defined [eV]
+            sigma_E_endf: Numpy array of neutron-capture cross section
+            corresponding to the energies in the array E_endf [b]
+            *vn: Numpy array of neutron velocities [m/s]. If omitted,
+            defaults to np.logspace(0,5,100000)
 
         Returns:
-            Value of the Westcott g factor for a user-specified flux distribution.
+            Value of the Westcott g factor for a user-specified flux
+            distribution.
 
         Raises:
             Fewer than four positional argument raises a TypeError exception.
 
         Example:
-            To obtain the value of the Westcott g factor for 115In, using the neutron-capture cross section from ENDF/B-VIII.1
-            obtained by calling the 'sigma_ENDF' function to produce arrays E_sigma_In115 and sigma_In115, and a flux distribution
-            corresponding to the cold-neutron source at the Budapest Research Reactor (BRR), after ingesting the distribution 
-            from a CSV file titled 'bnc_cold_spectrum_2012.csv' using the 'get_flux' function and defining the energy array and 
+            To obtain the value of the Westcott g factor for 115In, using
+            the neutron-capture cross section from ENDF/B-VIII.1
+            obtained by calling the 'sigma_ENDF' function to produce arrays
+            E_sigma_In115 and sigma_In115, and a flux distribution
+            corresponding to the cold-neutron source at the Budapest 
+            Research Reactor (BRR), after ingesting the distribution 
+            from a CSV file titled 'bnc_cold_spectrum_2012.csv' using 
+            the 'get_flux' function and defining the energy array and 
             flux array as 'En_BRR_cold' and 'phi_E_BRR_cold', respectively:
-            > gw_arbitrary(En_BRR_cold, phi_E_BRR_cold, E_sigma_In115, sigma_In115)
+            > find_flux()
+            > En_BRR_cold, phi_E_BRR_cold = get_flux(1)
+            > E_sigma_In115, sigma_In115 = gw.sigma_ENDF('In115')
+            > g_BRR_cold = gw_arbitrary(En_BRR_cold, phi_E_BRR_cold, \
+            E_sigma_In115, sigma_In115)
         """
         self.E_spectrum = E_spectrum
         self.phi_E_spectrum = phi_E_spectrum

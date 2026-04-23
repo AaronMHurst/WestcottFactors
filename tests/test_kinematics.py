@@ -29,7 +29,31 @@ class KinematicsTests(unittest.TestCase):
             with self.assertRaises(TypeError):
                 gw.display_constants(arg)
 
+    def test_vel_returns_float(self):
+        for u in range(0,10000):
+            v = gw.vel(u)
+            self.assertIsInstance(v, float)
+
+    def test_vel_raises_TypeError_passing_str(self):
+        with self.assertRaises(TypeError):
+            gw.vel("5.0")
+
+    def test_phi_v_IdealGuide_returns_np_array(self):
+        phi_ideal_293K = gw.phi_v_IdealGuide(293, np.linspace(1,10000,10000))
+        self.assertIsInstance(phi_ideal_293K, np.ndarray)
+
+    def test_phi_v_IdealGuide_raises_TypeError_passing_wrong_number_args(self):
+        with self.assertRaises(TypeError):
+            phi_ideal_293K = gw.phi_v_IdealGuide(293, np.linspace(1,10000,10000), 150)
+        with self.assertRaises(TypeError):
+            phi_ideal_293K = gw.phi_v_IdealGuide(293)
+
+    def test_phi_v_IdealGuide_raises_TypeError_passing_wrong_type_args(self):
+       
+        with self.assertRaises(TypeError):
+            phi_ideal_293K = gw.phi_v_IdealGuide(293, 800)
+        with self.assertRaises(TypeError):
+            phi_ideal_293K = gw.phi_v_IdealGuide("293", np.linspace(1,10000,10000))
+
     
-        
-    
-    
+                                              

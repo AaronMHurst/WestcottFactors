@@ -44,7 +44,25 @@ Various `Jupyter Notebooks` are provided in the `notebooks` folder to demonstrat
 
 ## Docstrings
 
-Supporting docstrings for the `westcott` methods are included as part of each module.
+All `westcott` classes and methods have supporting docstrings.  Please refer to the individual dosctrings for more information on any particular function including how to use it.  The dosctrings for each method generally have the following structure:
+
+* A short explanation of the function.
+* A list and description of arguments that need to be passed to the function.
+* The return value of the function.
+* Exceptions that may be raised.
+* An example(s) invoking use of the function.
+
+To retrieve a list of all available methods simply execute the following command in a Python interpreter:
+
+```python
+>>> help(gw)
+```
+
+Or, to retrieve the docstring for a particular method, e.g., the callable `gw_Maxwellian` to calculate the *g*-factor assuming a Maxwellian spectrum:
+
+```python
+>>> help(gw.gw_Maxwellian)
+```
 
 ## References
 <a id="1">[1]</a>

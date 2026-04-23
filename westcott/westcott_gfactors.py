@@ -402,8 +402,9 @@ class gFactors(Irregularity):
 
     def gw_IdealGuide(self, T, E, sigma, vn=np.logspace(0,5,100000)):
         """Evaluate the Westcott g factor for a nucleus by integrating over
-        the cross section in velocity space, with flux defined according to an ideal neutron guide distribution: velocity [m/s], energy [eV], cross section [b],
-        temperature [K].
+        the cross section in velocity space, with flux defined according 
+        to an ideal neutron guide distribution: velocity [m/s], energy [eV],
+        cross section [b], temperature [K].
         
         Notes:
             [1] D. A. Matters, A. M. Hurst, and T. Kawano: “Westcott g
@@ -493,8 +494,8 @@ class gFactors(Irregularity):
             > find_flux()
             > En_BRR_cold, phi_E_BRR_cold = get_flux(1)
             > E_sigma_In115, sigma_In115 = gw.sigma_ENDF('In115')
-            > g_BRR_cold = gw_arbitrary(En_BRR_cold, phi_E_BRR_cold, \
-            E_sigma_In115, sigma_In115)
+            > g_BRR_cold = gw_arbitrary(En_BRR_cold, phi_E_BRR_cold, 
+                           E_sigma_In115, sigma_In115)
         """
         self.E_spectrum = E_spectrum
         self.phi_E_spectrum = phi_E_spectrum

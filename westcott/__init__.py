@@ -4,7 +4,7 @@ from .tables import *
 from .user import *
 from .westcott_gfactors import *
 
-__version__='0.1.0'
+__version__='1.0.0'
 __author__='David A. Matters and Aaron M. Hurst'
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))

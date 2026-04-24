@@ -1,6 +1,6 @@
 # Westcott $g$-factor
 
-Python package for calculating Westcott $g$-factors, which adjust thermal-neutron capture cross sections for non-*1/v* behavior at low energies.  These are important in Neutron Activation Analysis (NAA) and Prompt Gamma-ray Activation Analysis (PGAA) when measuring nuclei that have low-energy resonances in their cross sections.  Code calculates $g$-factors for Maxwellian neutron energy distributions and individual neutron source spectra, when available.  A reference article describing this project is available on the arXiv [[1]](#1).
+Python package for calculating Westcott $g$-factors, which adjust thermal-neutron capture cross sections for non-*1/v* behavior at low energies.  These are important in Neutron Activation Analysis (NAA) and Prompt Gamma-ray Activation Analysis (PGAA) when measuring nuclei that have low-energy resonances in their cross sections.  Code calculates $g$-factors for Maxwellian neutron energy distributions and individual neutron source spectra, when available.  A reference article describing this project has been accepted for publication in Atomic Data and Nuclear Data Tables and is currently available on the arXiv [[1]](#1).
 
 ## Building and installation
 
@@ -44,7 +44,25 @@ Various `Jupyter Notebooks` are provided in the `notebooks` folder to demonstrat
 
 ## Docstrings
 
-Supporting docstrings for the `westcott` methods are included as part of each module.
+All `westcott` classes and methods have supporting docstrings.  Please refer to the individual dosctrings for more information on any particular function including how to use it.  The dosctrings for each method generally have the following structure:
+
+* A short explanation of the function.
+* A list and description of arguments that need to be passed to the function.
+* The return value of the function.
+* Exceptions that may be raised.
+* An example(s) invoking use of the function.
+
+To retrieve a list of all available methods simply execute the following command in a Python interpreter:
+
+```python
+>>> help(gw)
+```
+
+Or, to retrieve the docstring for a particular method, e.g., the callable `gw_Maxwellian` to calculate the *g*-factor assuming a Maxwellian spectrum:
+
+```python
+>>> help(gw.gw_Maxwellian)
+```
 
 ## References
 <a id="1">[1]</a>

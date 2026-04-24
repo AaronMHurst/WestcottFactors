@@ -14,7 +14,7 @@ class DataTests(unittest.TestCase):
     def test_find_targets_returns_list_of_strings_containing_553_objects(self):
         t = gw.find_targets()
         self.assertIsInstance(t, list)
-        assert len(t) == 553
+        assert len(t) == 554
         for s in t:
             self.assertIsInstance(s, str)
 

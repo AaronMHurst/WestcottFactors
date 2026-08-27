@@ -4,7 +4,7 @@ requirements = ["numpy", "scipy", "pandas"]
 
 setuptools.setup(
     name="westcott",
-    version="1.0.0",
+    version="1.0.1",
     url="https://github.com/DMatters/WestcottFactors",
     author="David Matters and Aaron M. Hurst",
     author_email="amhurst@berkeley.edu",

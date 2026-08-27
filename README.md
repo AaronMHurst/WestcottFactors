@@ -1,6 +1,6 @@
 # WestcottFactors
 
-Python package for calculating Westcott $g$ factors, which adjust thermal-neutron capture cross sections for non-*1/v* behavior at low energies.  These are important in Neutron Activation Analysis (NAA) and Prompt Gamma-ray Activation Analysis (PGAA) when measuring nuclei that have low-energy resonances in their cross sections.  Code calculates $g$ factors for Maxwellian neutron energy distributions and individual neutron source spectra, when available.  A reference article describing this project has been accepted for publication in Atomic Data and Nuclear Data Tables and is currently available on the arXiv [[1]](#1).
+Python package for calculating Westcott $g$ factors, which adjust thermal-neutron capture cross sections for non-*1/v* behavior at low energies.  These are important in Neutron Activation Analysis (NAA) and Prompt Gamma-ray Activation Analysis (PGAA) when measuring nuclei that have low-energy resonances in their cross sections.  Code calculates $g$ factors for Maxwellian neutron energy distributions and individual neutron source spectra, when available.  A reference article describing this project has been published in Atomic Data and Nuclear Data Tables [[1]](#1).
 
 ## Building and installation
 
@@ -67,5 +67,5 @@ Or, to retrieve the docstring for a particular method, e.g., the callable `gw_Ma
 ## References
 <a id="1">[1]</a>
 D.A. Matters, A.M. Hurst, T. Kawano,
-*"Westcott g Factors Extended to Arbitrary Neutron Energy Spectra"*,
-https://doi.org/10.48550/arXiv.2602.05995
+*"Westcott g Factors Extended to Arbitrary Neutron Energy Spectra"*, Atomic Data and Nuclear Data Tables 170 (2026) 101807.
+https://doi.org/10.1016/j.adt.2026.101807

@@ -12,10 +12,10 @@ $ cd WestcottFactors
 $ sh installation.sh
 ```
 
-As an alternative the project can also be installed via `pip` since it is being concurrently maintained on the Test instance of the Python Package Index repository https://test.pypi.org/project/westcott/
+As an alternative the project can also be installed via `pip` since it is being concurrently in an instance of the Python Package Index repository https://pypi.org/project/westcott/
 
 ```Bash
-pip install -i https://test.pypi.org/simple/ westcott
+pip install -i https://pypi.org/simple/ westcott
 ```
 
 ## Testing
